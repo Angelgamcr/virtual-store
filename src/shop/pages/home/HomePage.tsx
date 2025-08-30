@@ -1,17 +1,19 @@
-import { Button } from "@/components/ui/button"
+import { CustomPagination } from "@/components/custom/CustomPagination"
+import { CustomJumbotron } from "@/shop/components/CustomJumbotron"
+import { ProductsGrid } from "@/shop/components/ProductsGrid"
+import { products } from "@/mocks/products.mock"
 
 export const HomePage = () => {
   return (
-    <div>
-      HomePage
-      <h1 className="font-montserrat">Hola</h1>
-      <h1 className="font-montserrat font-thin">Hola</h1>
-      <h1 className="font-montserrat font-normal">Hola</h1>
-      <h1 className="font-montserrat font-bold">Hola</h1>
-      <Button>Button</Button>
+    <>
+      <CustomJumbotron
+        title="Estilo Tesla"
+        subTitle="Ropa minimalista y elegante inspirada en el diseño futurista de Tesla."
+      />
 
+      <ProductsGrid products={products} />
 
-      <p>Welcome to the HomePage!</p>
-    </div>
+      <CustomPagination totalPages={5} />
+    </>
   )
 }
