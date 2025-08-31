@@ -63,9 +63,9 @@ const FilterSidebar = () => {
           {sizes.map((size) => (
             <Button
               key={size.id}
-              variant={currentSizes.includes(size.id) ? 'default' : 'outline'}
+              variant={!currentSizes.includes(size.id) ? 'default' : 'outline'}
               size="sm"
-              className="h-8"
+              className="h-8 cursor-pointer"
               onClick={() => handleSizeChanged(size.id)}
             >
               {size.label}
@@ -86,6 +86,7 @@ const FilterSidebar = () => {
               id="priceAny"
               checked={currentPrice === "any"}
               onClick={() => handlePriceChange("any")}
+              className="cursor-pointer"
             />
             <Label htmlFor="priceAny" className="text-sm cursor-pointer">Cualquier precio</Label>
           </div>
@@ -93,8 +94,9 @@ const FilterSidebar = () => {
             <RadioGroupItem
               value="0-50"
               id="price1"
-              checked={currentPrice === "any"}
-              onClick={() => handlePriceChange("any")}
+              checked={currentPrice === "0-50"}
+              onClick={() => handlePriceChange("0-50")}
+              className="cursor-pointer"
             />
             <Label htmlFor="price1" className="text-sm cursor-pointer">$0 - $50</Label>
           </div>
@@ -104,6 +106,7 @@ const FilterSidebar = () => {
               id="price2"
               checked={currentPrice === "50-100"}
               onClick={() => handlePriceChange("50-100")}
+              className="cursor-pointer"
             />
             <Label htmlFor="price2" className="text-sm cursor-pointer">$50 - $100</Label>
           </div>
@@ -122,6 +125,7 @@ const FilterSidebar = () => {
               id="price4"
               checked={currentPrice === "200+"}
               onClick={() => handlePriceChange("200+")}
+              className="cursor-pointer"
             />
             <Label htmlFor="price4" className="text-sm cursor-pointer">$200+</Label>
           </div>
