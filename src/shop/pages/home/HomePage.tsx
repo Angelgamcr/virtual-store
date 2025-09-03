@@ -1,9 +1,12 @@
 import { CustomPagination } from "@/components/custom/CustomPagination"
 import { CustomJumbotron } from "@/shop/components/CustomJumbotron"
 import { ProductsGrid } from "@/shop/components/ProductsGrid"
-import { products } from "@/mocks/products.mock"
+import { useProducts } from "@/shop/hooks/useProducts"
 
 export const HomePage = () => {
+
+  const { data } = useProducts();
+
   return (
     <>
       <CustomJumbotron
@@ -11,9 +14,9 @@ export const HomePage = () => {
         subTitle="Ropa minimalista y elegante inspirada en el diseño futurista de Tesla."
       />
 
-      <ProductsGrid products={products} />
+      <ProductsGrid products={data?.products || []} />
 
-      <CustomPagination totalPages={5} />
+      <CustomPagination totalPages={data?.pages || 0} />
     </>
   )
 }
