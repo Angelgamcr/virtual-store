@@ -17,13 +17,18 @@ type AuthState = {
   isAdmin: () => boolean;
 
   // Actions
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  login: (
+    email: string,
+    password: string,
+    companySlug: string
+  ) => Promise<boolean>;
+  logout: () => Promise<boolean>;
   checkAuthStatus: () => Promise<boolean>;
   register: (
     fullName: string,
     email: string,
-    password: string
+    password: string,
+    companySlug: string
   ) => Promise<boolean>;
 };
 
@@ -40,10 +45,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   // Actions
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string, companySlug: string) => {
     try {
       // TODO: Agregar la empresa de Cesar
-      const data = await loginAction(email, password, "one-pizza");
+      const data = await loginAction(email, password, companySlug);
       // localStorage.setItem("access-token", data.accessToken);
       set({
         user: data.user,
@@ -84,15 +89,25 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return false;
     }
   },
-  register: async (fullName: string, email: string, password: string) => {
+  register: async (
+    fullName: string,
+    email: string,
+    password: string,
+    companySlug: string
+  ) => {
     try {
-      const data = await registerAction(fullName, email, password);
-      localStorage.setItem("access-token", data.accessToken);
-      set({
-        user: data.user,
-        token: data.accessToken,
-        authStatus: "authenticated",
-      });
+      /*const data =*/ await registerAction(
+        fullName,
+        email,
+        password,
+        companySlug
+      );
+      // localStorage.setItem("access-token", data.accessToken);
+      // set({
+      //   user: data.user,
+      //   token: data.accessToken,
+      //   authStatus: "authenticated",
+      // });
       return true;
     } catch (error) {
       console.log(error);

@@ -25,9 +25,9 @@ export const RegisterPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const isValid = await register(fullName, email, password)
+    const isValid = await register(fullName, email, password, 'one-pizza')
     if (isValid) {
-      navigate("/")
+      navigate("/auth/login")
       toast.success('Usuario creado con éxito.')
       return;
     }

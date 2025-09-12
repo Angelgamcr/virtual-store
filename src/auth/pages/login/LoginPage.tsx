@@ -22,7 +22,7 @@ export const LoginPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const isValid = await login(email, password)
+    const isValid = await login(email, password, 'one-pizza')
     if (isValid) {
       navigate("/")
       toast.success('Bienvenido de nuevo')
