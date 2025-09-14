@@ -49,7 +49,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       // TODO: Agregar la empresa de Cesar
       const data = await loginAction(email, password, companySlug);
-      // localStorage.setItem("access-token", data.accessToken);
+      // localStorage.setItem("token", data.accessToken);
       set({
         user: data.user,
         token: data.accessToken,
@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return true;
     } catch (error) {
       console.log(error);
-      // localStorage.removeItem("access-token");
+      // localStorage.removeItem("token");
       set({ user: null, token: null, authStatus: "unauthenticated" });
       return false;
     }
@@ -66,13 +66,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   logout: async () => {
     try {
       /*const data =*/ await logoutAction();
-      localStorage.removeItem("access-token");
+      localStorage.removeItem("token");
       localStorage.removeItem("token-init-date");
       set({ user: null, token: null, authStatus: "unauthenticated" });
       return true;
     } catch (error) {
       console.log(error);
-      // localStorage.removeItem("access-token");
+      // localStorage.removeItem("token");
       set({ user: null, token: null, authStatus: "unauthenticated" });
       return false;
     }
@@ -84,7 +84,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return true;
     } catch (error) {
       console.log(error);
-      localStorage.removeItem("access-token");
+      localStorage.removeItem("token");
       set({ user: undefined, token: undefined, authStatus: "unauthenticated" });
       return false;
     }
@@ -102,7 +102,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         password,
         companySlug
       );
-      // localStorage.setItem("access-token", data.accessToken);
+      // localStorage.setItem("token", data.accessToken);
       // set({
       //   user: data.user,
       //   token: data.accessToken,
@@ -111,7 +111,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return true;
     } catch (error) {
       console.log(error);
-      localStorage.removeItem("access-token");
+      localStorage.removeItem("token");
       set({ user: null, token: null, authStatus: "unauthenticated" });
       return false;
     }
