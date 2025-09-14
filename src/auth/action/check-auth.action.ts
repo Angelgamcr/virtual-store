@@ -7,11 +7,11 @@ export const checkAuthAction = async (): Promise<AuthResponse> => {
 
   try {
     const { data } = await shopApi.get<AuthResponse>("/auth/check-status");
-    localStorage.setItem("token", data.token);
+    // localStorage.setItem("token", data.accessToken);
     return data;
   } catch (error) {
     console.log("Check Status failed:", error);
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
     throw new Error("Failed to check auth status");
   }
 };

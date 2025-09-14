@@ -3,12 +3,14 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRef, type KeyboardEvent } from "react";
-import { Link, useParams, useSearchParams } from "react-router";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner"
 import { CustomLogo } from "@/components/custom/CustomLogo";
 import { useAuthStore } from "@/auth/store/auth.store";
 
 export const CustomHeader = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { authStatus, isAdmin, logout } = useAuthStore();
 
@@ -37,6 +39,16 @@ export const CustomHeader = () => {
 
   }
 
+  const OnLogout = async () => {
+    const isValid = await logout()
+    if (isValid) {
+      navigate("/")
+      toast.success('Su sesión se ha cerrado con éxito.')
+      return;
+    }
+
+    toast.error('Error al cerrar la sesión')
+  }
   return <header className="sticky top-0 z-50 w-full border-b backdrop-blur bg-slate-50">
     <div className="container mx-auto px-4 lg:px-8">
       <div className="flex h-16 items-center justify-between">
@@ -112,7 +124,7 @@ export const CustomHeader = () => {
                 </Button>
               </Link>
             ) : (
-              <Button variant={'outline'} size={'sm'} className="ml-2" onClick={logout}>
+              <Button variant={'outline'} size={'sm'} className="ml-2" onClick={OnLogout}>
                 Cerrar sesión
               </Button>
             )

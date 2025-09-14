@@ -8,7 +8,7 @@ export const useProducts = () => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get("query") || undefined;
-  const limit = searchParams.get("limit") || 9;
+  const limit = searchParams.get("limit") || 5;
   const page = searchParams.get("page") || 1;
   const sizes = searchParams.get("sizes") || undefined;
 
@@ -49,13 +49,14 @@ export const useProducts = () => {
     ],
     queryFn: () =>
       getProductsAction({
-        limit: isNaN(+limit) ? 9 : limit,
+        limit: isNaN(+limit) ? 5 : limit,
         offset: isNaN(offset) ? 0 : offset,
         gender,
         sizes,
         minPrice,
         maxPrice,
         query,
+        companySlug: "one-pizza", // companySlug
       }),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -1,6 +1,19 @@
-import type { User } from "@/interfaces/user.interface";
-
 export interface AuthResponse {
+  accessToken: string;
   user: User;
-  token: string;
+}
+
+export interface User {
+  id: number;
+  email: string;
+  password: string;
+  fullname: string;
+  isActive: boolean;
+  globalRole: string;
+  createdAt: Date;
+  createdById: number;
+  deletedAt: null;
+  deletedById: null;
+  phone: string;
+  roles: string[];
 }

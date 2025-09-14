@@ -25,9 +25,9 @@ export const RegisterPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const isValid = await register(fullName, email, password)
+    const isValid = await register(fullName, email, password, 'one-pizza')
     if (isValid) {
-      navigate("/")
+      navigate("/auth/login")
       toast.success('Usuario creado con éxito.')
       return;
     }
@@ -117,7 +117,7 @@ export const RegisterPage = () => {
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         {/* Haciendo click, estas de acuerdo con <a href="#">los Términos de Servicio</a> y <a href="#">la Política de Privacidad</a>. */}
-        Haciendo click, estas de acuerdo con <a href="#">terminos y condciones</a> y <a href="#">politicas de uso</a>.
+        Haciendo click, estas de acuerdo con <a href="#">terminos y condiciones</a> y <a href="#">politicas de uso</a>.
 
       </div>
     </div>

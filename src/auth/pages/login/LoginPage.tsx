@@ -22,7 +22,7 @@ export const LoginPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const isValid = await login(email, password)
+    const isValid = await login(email, password, 'one-pizza')
     if (isValid) {
       navigate("/")
       toast.success('Bienvenido de nuevo')
@@ -109,7 +109,7 @@ export const LoginPage = () => {
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         {/* Haciendo click, estas de acuerdo con <a href="#">los Términos de Servicio</a> y <a href="#">la Política de Privacidad</a>. */}
-        Haciendo click, estas de acuerdo con <a href="#">terminos y condciones</a> y <a href="#">politicas de uso</a>.
+        Haciendo click, estas de acuerdo con <a href="#">terminos y condiciones</a> y <a href="#">politicas de uso</a>.
 
       </div>
     </div>

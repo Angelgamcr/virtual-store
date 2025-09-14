@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { loginAction } from "../action/login.action";
 import { checkAuthAction } from "../action/check-auth.action";
 import { registerAction } from "../action/register.action";
+import { logoutAction } from "../action/logout.action";
 
 type AuthStatus = "authenticated" | "unauthenticated" | "checking";
 
@@ -16,13 +17,18 @@ type AuthState = {
   isAdmin: () => boolean;
 
   // Actions
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  login: (
+    email: string,
+    password: string,
+    companySlug: string
+  ) => Promise<boolean>;
+  logout: () => Promise<boolean>;
   checkAuthStatus: () => Promise<boolean>;
   register: (
     fullName: string,
     email: string,
-    password: string
+    password: string,
+    companySlug: string
   ) => Promise<boolean>;
 };
 
@@ -39,27 +45,42 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   // Actions
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string, companySlug: string) => {
     try {
-      const data = await loginAction(email, password);
-      localStorage.setItem("token", data.token);
-      set({ user: data.user, token: data.token, authStatus: "authenticated" });
+      // TODO: Agregar la empresa de Cesar
+      const data = await loginAction(email, password, companySlug);
+      // localStorage.setItem("token", data.accessToken);
+      set({
+        user: data.user,
+        token: data.accessToken,
+        authStatus: "authenticated",
+      });
       return true;
     } catch (error) {
       console.log(error);
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
       set({ user: null, token: null, authStatus: "unauthenticated" });
       return false;
     }
   },
-  logout: () => {
-    localStorage.removeItem("token");
-    set({ user: null, token: null, authStatus: "unauthenticated" });
+  logout: async () => {
+    try {
+      /*const data =*/ await logoutAction();
+      localStorage.removeItem("token");
+      localStorage.removeItem("token-init-date");
+      set({ user: null, token: null, authStatus: "unauthenticated" });
+      return true;
+    } catch (error) {
+      console.log(error);
+      // localStorage.removeItem("token");
+      set({ user: null, token: null, authStatus: "unauthenticated" });
+      return false;
+    }
   },
   checkAuthStatus: async () => {
     try {
-      const { user, token } = await checkAuthAction();
-      set({ user: user, token: token, authStatus: "authenticated" });
+      const { user, accessToken } = await checkAuthAction();
+      set({ user: user, token: accessToken, authStatus: "authenticated" });
       return true;
     } catch (error) {
       console.log(error);
@@ -68,11 +89,25 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return false;
     }
   },
-  register: async (fullName: string, email: string, password: string) => {
+  register: async (
+    fullName: string,
+    email: string,
+    password: string,
+    companySlug: string
+  ) => {
     try {
-      const data = await registerAction(fullName, email, password);
-      localStorage.setItem("token", data.token);
-      set({ user: data.user, token: data.token, authStatus: "authenticated" });
+      /*const data =*/ await registerAction(
+        fullName,
+        email,
+        password,
+        companySlug
+      );
+      // localStorage.setItem("token", data.accessToken);
+      // set({
+      //   user: data.user,
+      //   token: data.accessToken,
+      //   authStatus: "authenticated",
+      // });
       return true;
     } catch (error) {
       console.log(error);
