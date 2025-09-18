@@ -12,15 +12,20 @@ export const getProductByIdAction = async (id: string): Promise<Product> => {
       slug: "",
       price: 0,
       stock: 0,
+      iva: 0,
       sizes: [],
       gender: "men",
       tags: [],
       images: [],
+      categoryName: "",
     } as unknown as Product;
   }
 
-  const { data } = await shopApi.get<Product>(`/products/${id}`);
-
+  const { data } = await shopApi.get<Product>(`/products/${id}`, {
+    params: {
+      companySlug: "one-pizza",
+    },
+  });
   const images = data.images.map((image) => {
     if (image.includes("http")) return image;
     return `${import.meta.env.VITE_API_URL}/files/product/${image}`;

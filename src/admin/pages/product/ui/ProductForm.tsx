@@ -1,8 +1,8 @@
 import { AdminTitle } from "@/admin/components/AdminTitle";
 import { Button } from "@/components/ui/button";
-import type { Product, Size } from "@/interfaces/product.interface";
-import { Plus, SaveAll, Tag, Upload, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import type { Product } from "@/interfaces/product.interface";
+import { SaveAll, Upload, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,7 @@ interface Props {
   isPending: boolean;
 }
 
-const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+// const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 interface FormInputs extends Product {
   files?: File[]
@@ -51,7 +51,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
     defaultValues: product
   });
 
-  const labelInputRef = useRef<HTMLInputElement>(null)
+  // const labelInputRef = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
@@ -60,35 +60,35 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
 
 
 
-  const selectedSizes = watch('sizes')
-  const selectedTags = watch('tags')
+  // const selectedSizes = watch('sizes')
+  // const selectedTags = watch('tags')
   const currentStock = watch('stock')
 
-  const addTag = () => {
-    const newTag = labelInputRef.current!.value;
-    if (newTag === '') return;
-    const newTagSet = new Set(getValues('tags'));
-    newTagSet.add(newTag)
-    setValue('tags', Array.from(newTagSet))
-  };
+  // const addTag = () => {
+  //   const newTag = labelInputRef.current!.value;
+  //   if (newTag === '') return;
+  //   const newTagSet = new Set(getValues('tags'));
+  //   newTagSet.add(newTag)
+  //   setValue('tags', Array.from(newTagSet))
+  // };
 
-  const removeTag = (tag: string) => {
-    const newTagSet = new Set(getValues('tags'));
-    newTagSet.delete(tag)
-    setValue('tags', Array.from(newTagSet))
-  };
+  // const removeTag = (tag: string) => {
+  //   const newTagSet = new Set(getValues('tags'));
+  //   newTagSet.delete(tag)
+  //   setValue('tags', Array.from(newTagSet))
+  // };
 
-  const addSize = (size: Size) => {
-    const sizeSet = new Set(getValues('sizes'));
-    sizeSet.add(size);
-    setValue('sizes', Array.from(sizeSet))
-  };
+  // const addSize = (size: Size) => {
+  //   const sizeSet = new Set(getValues('sizes'));
+  //   sizeSet.add(size);
+  //   setValue('sizes', Array.from(sizeSet))
+  // };
 
-  const removeSize = (sizeToRemove: Size) => {
-    const sizeSet = new Set(getValues('sizes'));
-    sizeSet.delete(sizeToRemove);
-    setValue('sizes', Array.from(sizeSet))
-  };
+  // const removeSize = (sizeToRemove: Size) => {
+  //   const sizeSet = new Set(getValues('sizes'));
+  //   sizeSet.delete(sizeToRemove);
+  //   setValue('sizes', Array.from(sizeSet))
+  // };
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -186,7 +186,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Precio ($)
+                      Precio (₡)
                     </label>
                     <input
                       type="number"
@@ -211,7 +211,33 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                       )
                     }
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      IVA (%)
+                    </label>
+                    <input
+                      type="number"
+                      {...register('iva', {
+                        required: true,
+                        min: 0
+                      })}
 
+                      className={cn(
+                        "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",
+                        {
+                          'border-red-500': errors.iva
+                        }
+                      )}
+                      placeholder="Precio del producto"
+                    />
+                    {
+                      errors.iva && (
+                        <p className="text-red-500 text-sm">
+                          El iva debe ser mayor o igual a 0
+                        </p>
+                      )
+                    }
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Stock del producto
@@ -273,6 +299,35 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Disponibilidad del producto
+                  </label>
+                  <select
+                    {...register('available')}
+
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  >
+                    <option value="true">Mostrar</option>
+                    <option value="false">Ocultar</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Categoria
+                  </label>
+                  <select
+                    {...register('category')}
+
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  >
+                    {
+                      ['Pizza', 'Lacteos', 'Frutas'].map((category) =>
+                        <option value={category}>{category}</option>
+                      )
+                    }
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
                     Género del producto
                   </label>
                   <select
@@ -320,7 +375,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
             </div>
 
             {/* Sizes */}
-            <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+            {/* <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
               <h2 className="text-xl font-semibold text-slate-800 mb-6">
                 Tallas disponibles
               </h2>
@@ -374,10 +429,10 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
 
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Tags */}
-            <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+            {/* <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
               <h2 className="text-xl font-semibold text-slate-800 mb-6">
                 Etiquetas
               </h2>
@@ -421,7 +476,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                   </Button>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Sidebar */}
@@ -473,7 +528,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {product.images.map((image, index) => (
-                    <div key={index} className="relative group">
+                    <div key={image + index} className="relative group">
                       <div className="aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
                         <img
                           src={image}
@@ -481,7 +536,12 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                           className="w-full h-full object-cover rounded-lg"
                         />
                       </div>
-                      <button className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <button
+                        type="button"
+                        onClick={() => { }
+                          // TODO: Falta Eliminar Imagen deleteImage(image)
+                        }
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <X className="h-3 w-3" />
                       </button>
                       <p className="mt-1 text-xs text-slate-600 truncate">
@@ -563,14 +623,14 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                {/* <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
                   <span className="text-sm font-medium text-slate-700">
                     Tallas disponibles
                   </span>
                   <span className="text-sm text-slate-600">
                     {selectedSizes.length} tallas
                   </span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

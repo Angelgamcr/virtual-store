@@ -11,12 +11,10 @@ import { toast } from 'sonner';
 
 
 export const AdminProductPage = () => {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { isLoading, isError, data: product, mutation } = useProduct(id || "");
-
 
   const productTitle = id === 'new' ? 'Nuevo producto' : 'Editar producto';
   const productSubtitle =
@@ -30,7 +28,9 @@ export const AdminProductPage = () => {
         toast.success('Producto actualizado correctamente', {
           position: 'top-right'
         })
-        navigate(`/admin/products/${data.id}`)
+        navigate(`/admin/products/${data.id}`, {
+
+        })
       },
       onError: (error) => {
         console.log(error);
