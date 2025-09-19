@@ -1,11 +1,12 @@
 import { AdminTitle } from "@/admin/components/AdminTitle";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/interfaces/product.interface";
-import { SaveAll, Upload, X } from "lucide-react";
+import { Plus, SaveAll, Upload, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
+import { CustomFullScreenLoading } from "@/components/custom/CustomFullScreenLoading";
 
 // interface Product {
 //   id: string;
@@ -43,7 +44,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { isDirty, errors, },
     getValues,
     setValue,
     watch
@@ -51,10 +52,19 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
     defaultValues: product
   });
 
+  // const [showWarning, setShowWarning] = useState<boolean>(false);
+
   // const labelInputRef = useRef<HTMLInputElement>(null)
+  // Imagenes del producto
+  const [images, setImages] = useState<string[]>([]);
+  // Archivos a subir
   const [files, setFiles] = useState<File[]>([]);
 
+  //
+  const [hasUnsavedChangesInImages, setHasUnsavedChangesInImages] = useState<boolean>(false);
+
   useEffect(() => {
+    setImages(product.images)
     setFiles([])
   }, [product])
 
@@ -97,6 +107,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
     } else if (e.type === 'dragleave') {
       setDragActive(false);
     }
+    setHasUnsavedChangesInImages(true)
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -104,28 +115,76 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
     e.stopPropagation();
     setDragActive(false);
     const files = e.dataTransfer.files;
-    console.log(files);
 
     if (!files) return;
+
+    const filesArray = Array.from(files)
+
+    // Validacion de archivos
+    if (!isValidImages(filesArray)) return;
+
     // TODO: SET FILE NO ES NECESARIO. SE PUEDE QUITAR Y REFACTORIZAR CON USEFORM
-    setFiles((prev) => ([...prev, ...Array.from(files)]))
+    setFiles((prev) => ([...prev, ...filesArray]))
     const currentFiles = getValues('files') || []
-    setValue('files', [...currentFiles, ...Array.from(files)])
+    setValue('files', [...currentFiles, ...filesArray])
+    setHasUnsavedChangesInImages(true)
 
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    console.log(files);
+
 
     if (!files) return;
-    setFiles((prev) => ([...prev, ...Array.from(files)]))
+
+    const filesArray = Array.from(files)
+    // Validacion de archivos
+    if (!isValidImages(filesArray)) return;
+
+    setFiles((prev) => ([...prev, ...filesArray]))
     const currentFiles = getValues('files') || []
-    setValue('files', [...currentFiles, ...Array.from(files)])
+    setValue('files', [...currentFiles, ...filesArray])
+    setHasUnsavedChangesInImages(true)
 
   };
 
+  const deleteImage = (image: string) => {
+    setImages((prev) => (prev.filter(url => url != image)))
+    setHasUnsavedChangesInImages(true)
+  };
 
+  // Valida las imagenes: El tamano menor a 10 mb
+  const isValidImages = (filesArray: File[]): boolean => {
+    const filesErrorSize = filesArray.filter((file) => file.size > 1e+7) // Obtiene archivos superiores a 10 mb
+    if (filesErrorSize.length !== 0) {
+      // TODO: Alerta de que imagen(es) es superior a 10mb
+      return false
+    }
+
+    const filesErrorType = filesArray.filter((file) =>
+    ((file.type !== "image/jpg") &&
+      (file.type !== "image/jpeg") &&
+      (file.type !== "image/png") &&
+      (file.type !== "image/gif")
+    ))
+    if (filesErrorType.length !== 0) {
+      // TODO: Alerta de que imagen(es) no tiene el tipo de archivo correcto
+      return false
+    } // Obtiene archivos superiores a 10 mb
+    return true
+  }
+
+  const openModalAddCategory = () => {
+    // Abre modal de agregar categoria.
+    // TODO: AGREGAR CATEGORIA
+  }
+
+  // TODO: Hacer Alerta al dar Cancelar. Actualmente solo esta en Guardar
+  const hasUnsavedChanges = (!isDirty && !hasUnsavedChangesInImages)
+
+
+  if (isPending) return <CustomFullScreenLoading />
+  // if (!showWarning) return <p>Estas seguro?</p>
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} >
@@ -139,7 +198,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
             </Link>
           </Button>
 
-          <Button type={'submit'} disabled={isPending}>
+          <Button type={'submit'} disabled={hasUnsavedChanges}>
             <SaveAll className="w-4 h-4" />
             Guardar cambios
           </Button>
@@ -314,17 +373,22 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Categoria
                   </label>
-                  <select
-                    {...register('category')}
+                  <div className="w-full flex items-center">
+                    <select
+                      {...register('category')}
 
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  >
-                    {
-                      ['Pizza', 'Lacteos', 'Frutas'].map((category) =>
-                        <option value={category}>{category}</option>
-                      )
-                    }
-                  </select>
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    >
+                      {
+                        ['Pizza', 'Lacteos', 'Frutas'].map((category) =>
+                          <option key={`categoryOption${category}`} value={category}>{category}</option>
+                        )
+                      }
+                    </select>
+                    <Button onClick={openModalAddCategory} className="ml-2 px-4 py-2 rounded-lg ">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -501,9 +565,11 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                 <input
                   type="file"
                   multiple
-                  accept="image/*"
+                  // accept="image/*"
+                  accept="image/jpg, image/jpeg, image/gif, image/png" // Validaciones realizadas en 'OnChange'
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   onChange={handleFileChange}
+                  size={1e+7} // maxSize=10mb : // Validaciones realizadas en 'OnChange'
                 />
                 <div className="space-y-4">
                   <Upload className="mx-auto h-12 w-12 text-slate-400" />
@@ -527,7 +593,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                   Imágenes actuales
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {product.images.map((image, index) => (
+                  {images.map((image, index) => (
                     <div key={image + index} className="relative group">
                       <div className="aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
                         <img
@@ -538,9 +604,7 @@ export const ProductForm = ({ title, subTitle, product, onSubmit, isPending }: P
                       </div>
                       <button
                         type="button"
-                        onClick={() => { }
-                          // TODO: Falta Eliminar Imagen deleteImage(image)
-                        }
+                        onClick={() => deleteImage(image)}
                         className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <X className="h-3 w-3" />
                       </button>
