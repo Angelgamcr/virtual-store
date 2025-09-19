@@ -1,5 +1,5 @@
 import React from 'react';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 
 interface StatCardProps {
   title: string;
@@ -10,13 +10,13 @@ interface StatCardProps {
   color: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ 
-  title, 
-  value, 
-  change, 
-  changeType, 
-  icon: Icon, 
-  color 
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  change,
+  changeType,
+  icon: Icon,
+  color
 }) => {
   const changeColor = {
     positive: 'text-green-600 bg-green-50',
