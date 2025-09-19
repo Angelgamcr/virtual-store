@@ -11,12 +11,10 @@ import { toast } from 'sonner';
 
 
 export const AdminProductPage = () => {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { isLoading, isError, data: product, mutation } = useProduct(id || "");
-
 
   const productTitle = id === 'new' ? 'Nuevo producto' : 'Editar producto';
   const productSubtitle =

@@ -47,41 +47,39 @@ export const AdminProductsPage = () => {
         </TableHeader>
         <TableBody>
 
-          {
-            data!.products.map((product: Product) => (
-
-              <TableRow>
-                <TableCell>
-                  <img
-                    src={product.images[0]}
-                    alt={product.title}
-                    className="w-20 h-20 object-cover rounded-md"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Link to={`/admin/products/${product.id}`}
-                    className="hover:text-blue-500 underline"
-                  >
-                    {product.title}
-                  </Link>
-                </TableCell>
-                <TableCell>{currencyFormatter(product.price)}</TableCell>
-                <TableCell>{product.gender}</TableCell>
-                <TableCell>{product.stock} stock</TableCell>
-                <TableCell>{product.sizes}</TableCell>
-                <TableCell className="text-right">
-                  {/* <Link to="t-shirt-teslo"> */}
-                  <Link to={`/admin/products/${product.id}`}>
-                    <PencilIcon className="w-4 h-4 text-blue-500 hover:text-blue-700" />
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))
+          {data!.products.map((product: Product) => (
+            <TableRow key={'productTable' + product.slug}>
+              <TableCell>
+                <img
+                  src={product.images[0]}
+                  alt={product.title}
+                  className="w-20 h-20 object-cover rounded-md"
+                />
+              </TableCell>
+              <TableCell>
+                <Link to={`/admin/products/${product.id}`}
+                  className="hover:text-blue-500 underline"
+                >
+                  {product.title}
+                </Link>
+              </TableCell>
+              <TableCell>{currencyFormatter(product.price)}</TableCell>
+              <TableCell>{product.gender}</TableCell>
+              <TableCell>{product.stock} stock</TableCell>
+              <TableCell>{product.sizes}</TableCell>
+              <TableCell className="text-right">
+                {/* <Link to="t-shirt-teslo"> */}
+                <Link to={`/admin/products/${product.id}`}>
+                  <PencilIcon className="w-4 h-4 text-blue-500 hover:text-blue-700" />
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))
           }
         </TableBody>
       </Table>
 
-      <CustomPagination totalPages={10} />
+      <CustomPagination totalPages={data?.pages || 0} />
 
     </>
   )

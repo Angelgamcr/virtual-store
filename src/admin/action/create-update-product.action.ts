@@ -5,17 +5,18 @@ import { sleep } from "@/lib/sleep";
 export const createUpdateProductAction = async (
   productLike: Partial<Product> & { files?: File[] }
 ): Promise<Product> => {
-  // Espera 1.5 seg
+  // TODO: USAR LOADING Y TOAST Y BORRAR. Espera 1.5 seg
   await sleep(1500);
 
-  const { id, user, images = [], files = [], ...rest } = productLike;
+  const { id, /*user,*/ images = [], files = [], ...rest } = productLike;
 
   const isCreating = id === "new";
 
   rest.stock = Number(rest.stock || 0);
   rest.price = Number(rest.price || 0);
+  rest.iva = Number(rest.iva || 0);
 
-  //Preparar las imagenes
+  // Preparar las imagenes
   if (files.length > 0) {
     const newImageNames = await uploadFiles(files);
     images.push(...newImageNames);
@@ -32,8 +33,12 @@ export const createUpdateProductAction = async (
     data: {
       ...rest,
       images: imagesToSave,
+      categoryName: "Pizza",
+      companySlug: "one-pizza",
     },
   });
+
+  console.log(isCreating ? "POST" : "PATCH", data);
 
   return {
     ...data,
