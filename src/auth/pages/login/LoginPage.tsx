@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CustomLogo } from "@/components/custom/CustomLogo"
 import { useState, type FormEvent } from "react"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { toast } from "sonner"
 import { useAuthStore } from "@/auth/store/auth.store"
 
@@ -92,9 +92,9 @@ export const LoginPage = () => {
               </div>
               <div className="text-center text-sm">
                 ¿No tienes una cuenta?{" "}
-                <a href="/auth/register" className="underline underline-offset-4">
+                <Link to="/auth/register" className="underline underline-offset-4">
                   Regístrate
-                </a>
+                </Link>
               </div>
             </div>
           </form>
